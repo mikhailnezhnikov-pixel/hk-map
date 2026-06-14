@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>HK Map Studio</title>
+  <link rel="stylesheet" href="maplibre-gl.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="map"></div>
+
+  <aside class="panel">
+    <header>
+      <div>
+        <p class="eyebrow">Локальная карта</p>
+        <h1>HK Map Studio</h1>
+      </div>
+      <span class="offline">Офлайн</span>
+    </header>
+
+    <label id="dropZone" class="drop-zone">
+      <input id="fileInput" type="file" accept=".json,.geojson,.html,.htm,application/json,text/html">
+      <strong>Загрузить карту</strong>
+      <span>GeoJSON, JSON или сохранённая HTML-карта</span>
+    </label>
+
+    <div class="map-selectors">
+      <label>
+        <span>Город</span>
+        <select id="citySelect"></select>
+      </label>
+      <label>
+        <span>Карта / сектор</span>
+        <select id="mapSelect"></select>
+      </label>
+    </div>
+    <button id="loadSelectedMap" class="button primary" type="button">Открыть выбранную карту</button>
+    <div class="scope-stats">
+      <div>
+        <span>Город: всего / открыто</span>
+        <strong id="cityBuildingCount">0 / 0</strong>
+      </div>
+      <div>
+        <span>Сектор: всего / открыто</span>
+        <strong id="sectorBuildingCount">0 / 0</strong>
+      </div>
+    </div>
+    <p id="status" class="status">Загрузите данные для начала</p>
+
+    <section id="controls" class="hidden">
+      <div class="stats">
+        <div><span>Показано</span><strong id="visibleCount">0</strong></div>
+        <div><span>Всего</span><strong id="totalCount">0</strong></div>
+        <div><span>Инвестиции</span><strong id="investmentCount">0</strong></div>
+      </div>
+
+      <label class="search">
+        <span>Поиск здания</span>
+        <input id="searchInput" type="search" placeholder="Название, ID, фракция...">
+      </label>
+
+      <fieldset>
+        <legend>Статус здания</legend>
+        <div id="buildingStatusFilters" class="chips"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Кристаллы здания</legend>
+        <div id="diamondFilters" class="chips"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Тип здания</legend>
+        <label class="check"><input id="normalFilter" type="checkbox" checked> Обычные</label>
+        <label class="check"><input id="investmentFilter" type="checkbox" checked> Инвестиционные</label>
+      </fieldset>
+
+      <div class="actions">
+        <button id="fitButton" class="button" type="button">Показать все</button>
+        <button id="exportGeoJson" class="button" type="button">GeoJSON</button>
+        <button id="exportCsv" class="button" type="button">CSV</button>
+      </div>
+    </section>
+
+    <section id="featureCard" class="feature-card hidden">
+      <div class="card-heading">
+        <p class="eyebrow">Выбранное здание</p>
+        <button id="closeCard" type="button" aria-label="Закрыть">×</button>
+      </div>
+      <h2 id="featureName">Без названия</h2>
+      <div id="featureProperties" class="properties"></div>
+    </section>
+
+    <footer>Данные обрабатываются только в браузере.</footer>
+  </aside>
+
+  <script src="maplibre-gl.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
