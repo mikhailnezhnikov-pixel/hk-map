@@ -20,12 +20,6 @@
       <span class="offline">Офлайн</span>
     </header>
 
-    <label id="dropZone" class="drop-zone">
-      <input id="fileInput" type="file" accept=".json,.geojson,.html,.htm,application/json,text/html">
-      <strong>Загрузить карту</strong>
-      <span>GeoJSON, JSON или сохранённая HTML-карта</span>
-    </label>
-
     <div class="map-selectors">
       <label>
         <span>Город</span>
@@ -56,11 +50,6 @@
         <div><span>Инвестиции</span><strong id="investmentCount">0</strong></div>
       </div>
 
-      <label class="search">
-        <span>Поиск здания</span>
-        <input id="searchInput" type="search" placeholder="Название, ID, фракция...">
-      </label>
-
       <fieldset>
         <legend>Статус здания</legend>
         <div id="buildingStatusFilters" class="chips"></div>
@@ -71,17 +60,6 @@
         <div id="diamondFilters" class="chips"></div>
       </fieldset>
 
-      <fieldset>
-        <legend>Тип здания</legend>
-        <label class="check"><input id="normalFilter" type="checkbox" checked> Обычные</label>
-        <label class="check"><input id="investmentFilter" type="checkbox" checked> Инвестиционные</label>
-      </fieldset>
-
-      <div class="actions">
-        <button id="fitButton" class="button" type="button">Показать все</button>
-        <button id="exportGeoJson" class="button" type="button">GeoJSON</button>
-        <button id="exportCsv" class="button" type="button">CSV</button>
-      </div>
     </section>
 
     <section id="featureCard" class="feature-card hidden">

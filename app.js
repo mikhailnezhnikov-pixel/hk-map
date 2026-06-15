@@ -31,9 +31,8 @@ let mapCatalog = { cities: [] };
 
 const elements = Object.fromEntries(
   [
-    "dropZone", "fileInput", "citySelect", "mapSelect", "loadSelectedMap", "status", "controls", "visibleCount",
-    "totalCount", "investmentCount", "searchInput", "buildingStatusFilters", "diamondFilters", "normalFilter",
-    "investmentFilter", "fitButton", "exportGeoJson", "exportCsv", "featureCard",
+    "citySelect", "mapSelect", "loadSelectedMap", "status", "controls", "visibleCount",
+    "totalCount", "investmentCount", "buildingStatusFilters", "diamondFilters", "featureCard",
     "featureName", "featureProperties", "closeCard", "cityBuildingCount", "sectorBuildingCount"
   ].map(id => [id, document.getElementById(id)])
 );
@@ -282,7 +281,6 @@ function searchable(properties) {
 function applyFilters() {
   const statuses = new Set([...elements.buildingStatusFilters.querySelectorAll("input:checked")].map(input => input.value));
   const diamondStatuses = new Set([...elements.diamondFilters.querySelectorAll("input:checked")].map(input => input.value));
-  const query = elements.searchInput.value.trim().toLocaleLowerCase("ru-RU");
   visibleData = {
     type: "FeatureCollection",
     features: sourceData.features.filter(feature => {
@@ -292,9 +290,7 @@ function applyFilters() {
       if (!statuses.has(status)) return false;
       const diamonds = String(Number(properties.diamonds || 0));
       if (!diamondStatuses.has(diamonds)) return false;
-      if (properties.is_investment && !elements.investmentFilter.checked) return false;
-      if (!properties.is_investment && !elements.normalFilter.checked) return false;
-      return !query || searchable(properties).includes(query);
+      return true;
     })
   };
   map.getSource("features")?.setData(visibleData);
@@ -360,7 +356,6 @@ function csvCell(value) {
   return `"${String(value ?? "").replaceAll('"', '""')}"`;
 }
 
-elements.fileInput.addEventListener("change", event => event.target.files[0] && loadFile(event.target.files[0]));
 async function loadCatalog() {
   try {
     const response = await fetch("maps/catalog.json");
@@ -423,23 +418,4 @@ elements.mapSelect.addEventListener("change", () => {
   loadSelectedCatalogMap();
 });
 elements.loadSelectedMap.addEventListener("click", loadSelectedCatalogMap);
-["dragenter", "dragover"].forEach(type => elements.dropZone.addEventListener(type, event => {
-  event.preventDefault();
-  elements.dropZone.classList.add("dragging");
-}));
-["dragleave", "drop"].forEach(type => elements.dropZone.addEventListener(type, event => {
-  event.preventDefault();
-  elements.dropZone.classList.remove("dragging");
-}));
-elements.dropZone.addEventListener("drop", event => event.dataTransfer.files[0] && loadFile(event.dataTransfer.files[0]));
-elements.searchInput.addEventListener("input", applyFilters);
-elements.normalFilter.addEventListener("change", applyFilters);
-elements.investmentFilter.addEventListener("change", applyFilters);
-elements.fitButton.addEventListener("click", () => fitToData(visibleData));
 elements.closeCard.addEventListener("click", clearSelection);
-elements.exportGeoJson.addEventListener("click", () => download("hk-map-visible.geojson", JSON.stringify(visibleData, null, 2), "application/geo+json"));
-elements.exportCsv.addEventListener("click", () => {
-  const keys = [...new Set(visibleData.features.flatMap(feature => Object.keys(feature.properties)))].sort();
-  const rows = [keys, ...visibleData.features.map(feature => keys.map(key => feature.properties[key]))];
-  download("hk-map-visible.csv", "\ufeff" + rows.map(row => row.map(csvCell).join(";")).join("\r\n"), "text/csv;charset=utf-8");
-});
